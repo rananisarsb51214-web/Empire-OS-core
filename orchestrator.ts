@@ -1,3 +1,8 @@
+// Inside Orchestrator
+if (agent === "content") {
+  const factory = new ContentFactoryAgent();
+  await factory.processAsset(taskId, input);
+}
 import { MultiModelRouter } from "./router";
 
 static async dispatch(input: string, agent: AgentType) {
