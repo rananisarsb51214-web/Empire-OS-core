@@ -1,0 +1,16 @@
+empire-os-core/
+├── core/
+│   ├── orchestrator.ts    # Central Dispatcher
+│   ├── eventBus.ts        # Pub/Sub Backbone
+│   ├── telemetry.ts       # Metrics/Logs
+│   ├── reconciler.ts      # Self-healing Logic
+│   └── router.ts          # Multi-Model + Fallback Logic
+├── agents/
+│   ├── finance.ts
+│   ├── health.ts
+│   └── content.ts
+├── lib/
+│   └── firebase-admin.ts  # Shared State Layer
+├── index.ts               # Entry point
+├── docker-compose.yml     # Container Orchestration
+└── README.md              # Empire Documentation
