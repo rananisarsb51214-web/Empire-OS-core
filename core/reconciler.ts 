@@ -1,0 +1,48 @@
+import { db } from "../lib/firebase-admin";
+import { EventBus } from "./eventBus";
+
+export class Reconciler {
+  // Task timeout limit (e.g., 10 minutes)
+  private static readonly TIMEOUT_THRESHOLD = 10 * 60 * 1000;
+
+  static async run() {
+    console.log("🔍 Reconciler: Running health check...");
+
+    const tasksRef = db.ref("empire/tasks");
+    const snapshot = await tasksRef.orderByChild("status").equalTo("processing").get();
+    
+    const tasks = snapshot.val();
+    if (!tasks) return;
+
+    const now = Date.now();
+
+    for (const [taskId, task] of Object.entries(tasks as any)) {
+      const taskData = task as any;
+
+      // Check if task is older than threshold
+      if (now - taskData.ts > this.TIMEOUT_THRESHOLD) {
+        console.warn(`⚠️ Reconciler: Task ${taskId} is stuck. Resetting...`);
+
+        // Emit failure event for audit
+        EventBus.emit({
+          type: "TASK_FAILED",
+          taskId,
+          error: "TIMEOUT_RECONCILIATION_TRIGGERED"
+        });
+
+        // Force update status
+        await db.ref(`empire/tasks/${taskId}`).update({
+          status: "failed",
+          reconciledAt: now,
+          error: "Stuck in processing"
+        });
+      }
+    }
+  }
+
+  // Start background loop
+  static startLoop(intervalMs: number = 60000) {
+    setInterval(() => this.run(), intervalMs);
+    console.log("🛡️ Reconciler: Active and monitoring...");
+  }
+}
