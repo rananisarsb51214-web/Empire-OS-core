@@ -1,0 +1,13 @@
+# 1. Folder create karein
+mkdir empire-os-core
+cd empire-os-core
+
+# 2. Git initialize karein
+git init
+
+# 3. Necessary files create karein
+touch README.md Dockerfile docker-compose.yml .gitignore
+
+# 4. Node.js project setup
+npm init -y
+npm install firebase-admin dotenv
