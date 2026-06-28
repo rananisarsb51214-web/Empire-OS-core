@@ -1,0 +1,20 @@
+{
+  "name": "empire-os-root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "eslint .",
+    "deploy:worker": "gcloud run deploy empire-worker --source .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "turbo": "^2.0.0"
+  }
+}
