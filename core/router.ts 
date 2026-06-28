@@ -1,0 +1,34 @@
+import { AgentType } from "../apps/api-orchestrator/registry";
+
+export type ModelProvider = "claude-3-opus" | "gemini-1.5-pro" | "gpt-4o";
+
+export class MultiModelRouter {
+  
+  static selectModel(agent: AgentType, complexity: 'high' | 'low'): ModelProvider {
+    // Decision Matrix
+    if (agent === "health" || complexity === 'high') {
+      // Health AI needs deep reasoning and high reliability
+      return "claude-3-opus";
+    }
+    
+    if (agent === "finance") {
+      // Finance AI needs speed and logic balance
+      return "gpt-4o";
+    }
+
+    // Default for content/general tasks (High speed, cost-effective)
+    return "gemini-1.5-pro";
+  }
+
+  static async route(taskId: string, agent: AgentType, input: string) {
+    // Complexity heuristic (Can be expanded with a small NLP model)
+    const complexity = input.split(" ").length > 100 ? 'high' : 'low';
+    
+    const provider = this.selectModel(agent, complexity);
+    
+    console.log(`🚀 Routing taskId: ${taskId} to ${provider} for ${agent} agent.`);
+    
+    // Add logic here to trigger the specific model API (Claude/Gemini/OpenAI)
+    return provider;
+  }
+}
